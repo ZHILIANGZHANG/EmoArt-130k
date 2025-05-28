@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -94,6 +55,25 @@
             color: white;
             text-decoration: none;
             font-size: 1rem;
+        }
+
+        .hero-image {
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #E5E7EB;
+            border-radius: 5px;
+        }
+
+        .hero-image-caption {
+            font-size: 1rem;
+            color: #1F2A44;
+            margin-top: 0.5rem;
+            font-style: italic;
         }
 
         .section {
@@ -273,6 +253,10 @@
             .nav-links {
                 display: none;
             }
+
+            .hero-image img {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -290,6 +274,13 @@
     </header>
 
     <main>
+        <section class="hero-image">
+            <div class="container">
+                <img src="overvirw.jpg" alt="EmoArt Dataset Preview">
+                <div class="hero-image-caption">Dataset Preview: Sample artworks from the EmoArt collection</div>
+            </div>
+        </section>
+
         <section class="section">
             <div class="container">
                 <h2 class="section-title">EmoArt Dataset</h2>
