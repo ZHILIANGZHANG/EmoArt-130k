@@ -1,0 +1,510 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmoArt: Enabling Emotion-Aware Generation via Large-Scale Artistic Dataset</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: #1F2A44;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #1E3A8A;
+            color: white;
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .section {
+            padding: 3rem 0;
+            background: white;
+            margin: 2rem 0;
+            border: 1px solid #E5E7EB;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1E3A8A;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #E5E7EB;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #D1D5DB;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1E3A8A;
+            display: block;
+        }
+
+        .stat-label {
+            color: #1F2A44;
+            font-size: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1E3A8A;
+            margin-bottom: 0.5rem;
+        }
+
+        .annotation-schema {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .annotation-item {
+            background: #F9FAFB;
+            padding: 1rem;
+            border-left: 3px solid #1E3A8A;
+        }
+
+        .annotation-title {
+            font-weight: 600;
+            color: #1F2A44;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            background: #E5E7EB;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #D1D5DB;
+            font-size: 0.9rem;
+            color: #1F2A44;
+        }
+
+        .benchmark-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: white;
+            border: 1px solid #E5E7EB;
+        }
+
+        .benchmark-table th,
+        .benchmark-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .benchmark-table th {
+            background: #1E3A8A;
+            color: white;
+            font-weight: 600;
+        }
+
+        .best-score {
+            font-weight: bold;
+            color: #1E3A8A;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #1E3A8A;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #1E3A8A;
+            background: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #1E3A8A;
+            color: white;
+        }
+
+        .citation-box {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        footer {
+            background: #1E3A8A;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">EmoArt</a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#styles">Art Styles</a></li>
+                <li><a href="#benchmarks">Benchmarks</a></li>
+                <li><a href="#citation">Citation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">EmoArt Dataset</h2>
+                <p style="text-align: center; margin-bottom: 2rem; color: #1F2A44;">
+                    Enabling Emotion-Aware Generation via a Large-Scale and Annotated Artistic Dataset
+                </p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">132K+</span>
+                        <div class="stat-label">Artworks</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">56</span>
+                        <div class="stat-label">Art Styles</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">12</span>
+                        <div class="stat-label">Emotions</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <div class="stat-label">Visual Attributes</div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <a href="https://huggingface.co/datasets/printblue/EmoArt-130k" class="btn btn-primary">
+                        Download Dataset
+                    </a>
+                    <a href="#" class="btn">
+                        Read Paper
+                    </a>
+                    <a href="#" class="btn">
+                        View Code
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">About EmoArt</h2>
+                <p style="font-size: 1.1rem; text-align: justify; margin-bottom: 2rem;">
+                    EmoArt is a pioneering large-scale dataset designed for emotional analysis and generation in artistic images. Comprising over 132,000 artworks, it spans Western and Eastern art traditions, from Renaissance to contemporary movements, bridging the gap between visual art and emotion understanding. The dataset includes multi-dimensional annotations generated by GPT-4o with human validation (>85% agreement), covering emotional, visual, and therapeutic dimensions. EmoArt enables AI systems to create emotionally expressive artistic content, supporting applications in affective computing, art therapy, and creative design.
+                </p>
+                
+                <h3 style="font-size: 1.5rem; color: #1E3A8A; margin: 2rem 0 1rem;">Annotation Schema</h3>
+                <div class="annotation-schema">
+                    <div class="annotation-item">
+                        <div class="annotation-title">Content Description</div>
+                        <p>Detailed, emotionally-aware descriptions averaging 35.6 words with rich narrative content and artistic context</p>
+                    </div>
+                    <div class="annotation-item">
+                        <div class="annotation-title">Visual Attributes</div>
+                        <p>Five artistic elements: Brushwork, Composition, Color, Line, and Light with structured analysis</p>
+                    </div>
+                    <div class="annotation-item">
+                        <div class="annotation-title">Valence & Arousal</div>
+                        <p>Binary emotional dimensions based on Russell's circumplex model for systematic emotion mapping</p>
+                    </div>
+                    <div class="annotation-item">
+                        <div class="annotation-title">Emotion Categories</div>
+                        <p>12 representative emotions spanning the full valence-arousal space for interpretable classification</p>
+                    </div>
+                    <div class="annotation-item">
+                        <div class="annotation-title">Therapeutic Potential</div>
+                        <p>Assessment of potential psychological benefits for art therapy and wellness applications</p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.5rem; color: #1E3A8A; margin: 2rem 0 1rem;">Applications</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-title">Emotion-Aware Generation</div>
+                        <p>Train models to generate images with specific emotional expressions and artistic styles</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Affective Computing</div>
+                        <p>Advance research in emotion recognition, sentiment analysis, and computational psychology</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Art Therapy</div>
+                        <p>Support therapeutic applications and mental health interventions through AI-assisted art</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-title">Creative Design</div>
+                        <p>Enable new forms of human-AI collaboration in artistic creation and design</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="styles" class="section">
+            <div class="container">
+                <h2 class="section-title">Art Style Distribution</h2>
+                <div class="gallery">
+                    <div class="gallery-item">Impressionism<br>15,295 works</div>
+                    <div class="gallery-item">Realism<br>12,847 works</div>
+                    <div class="gallery-item">Expressionism<br>10,039 works</div>
+                    <div class="gallery-item">Abstract Art<br>8,756 works</div>
+                    <div class="gallery-item">Romanticism<br>7,892 works</div>
+                    <div class="gallery-item">Chinese Painting<br>4,156 works</div>
+                    <div class="gallery-item">Ukiyo-e<br>3,689 works</div>
+                    <div class="gallery-item">Surrealism<br>4,432 works</div>
+                    <div class="gallery-item">Cubism<br>3,024 works</div>
+                    <div class="gallery-item">Pop Art<br>2,891 works</div>
+                    <div class="gallery-item">Fauvism<br>2,456 works</div>
+                    <div class="gallery-item">+ 45 more styles</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="benchmarks" class="section">
+            <div class="container">
+                <h2 class="section-title">Benchmark Results</h2>
+                <p style="text-align: center; margin-bottom: 2rem; color: #1F2A44;">
+                    Evaluation of state-of-the-art text-to-image diffusion models
+                </p>
+                
+                <table class="benchmark-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Overall Quality</th>
+                            <th>Emotion Alignment</th>
+                            <th>Color</th>
+                            <th>Composition</th>
+                            <th>FID ↓</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FLUX.1-dev-lora</strong></td>
+                            <td class="best-score">0.6604</td>
+                            <td class="best-score">0.6698</td>
+                            <td class="best-score">0.6974</td>
+                            <td class="best-score">0.6698</td>
+                            <td>31.65</td>
+                        </tr>
+                        <tr>
+                            <td>PixArt-sigma</td>
+                            <td>0.6505</td>
+                            <td>0.6342</td>
+                            <td>0.6746</td>
+                            <td>0.6342</td>
+                            <td>36.23</td>
+                        </tr>
+                        <tr>
+                            <td>Playground</td>
+                            <td>0.6486</td>
+                            <td>0.6247</td>
+                            <td>0.6788</td>
+                            <td>0.6247</td>
+                            <td>42.57</td>
+                        </tr>
+                        <tr>
+                            <td>SD3.5</td>
+                            <td>0.6466</td>
+                            <td>0.6324</td>
+                            <td>0.6742</td>
+                            <td>0.6324</td>
+                            <td>37.96</td>
+                        </tr>
+                        <tr>
+                            <td>FLUX.1-dev</td>
+                            <td>0.6392</td>
+                            <td>0.6228</td>
+                            <td>0.6703</td>
+                            <td>0.6228</td>
+                            <td class="best-score">21.29</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="citation" class="section">
+            <div class="container">
+                <h2 class="section-title">Citation</h2>
+                <p style="text-align: center; margin-bottom: 2rem; color: #1F2A44;">
+                    If you use EmoArt in your research, please cite our paper:
+                </p>
+                
+                <div class="citation-box">
+@inproceedings{zhang2025emoart,
+  title={EmoArt: Enabling Emotion-Aware Generation via a Large-Scale and Annotated Artistic Dataset},
+  author={Zhang, Cheng},
+  booktitle={Proceedings of the 33rd ACM International Conference on Multimedia},
+  pages={1--9},
+  year={2025},
+  publisher={ACM}
+}
+                </div>
+
+                <div class="buttons">
+                    <a href="https://huggingface.co/datasets/printblue/EmoArt-130k" class="btn btn-primary">
+                        HuggingFace Dataset
+                    </a>
+                    <a href="#" class="btn">
+                        ArXiv Paper
+                    </a>
+                    <a href="#" class="btn">
+                        GitHub Code
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 EmoArt Dataset. Released under Creative Commons License.</p>
+            <p>Contact: zhangcheng2122@jlu.edu.com | Jilin University</p>
+        </div>
+    </footer>
+</body>
+</html>
