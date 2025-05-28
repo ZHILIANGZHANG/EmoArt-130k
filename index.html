@@ -4,8 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmoArt: Enabling Emotion-Aware Generation via Large-Scale Artistic Dataset</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap">
     <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --success: #4cc9f0;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,10 +24,10 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: #f9f9f9;
+            color: var(--dark);
+            background: var(--light);
             min-height: 100vh;
         }
 
@@ -27,11 +38,13 @@
         }
 
         header {
-            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+            background: var(--dark);
             color: white;
             padding: 1.5rem 0;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         nav {
@@ -47,6 +60,14 @@
             color: white;
             text-decoration: none;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 1.4rem;
+            height: 1.4rem;
         }
 
         .nav-links {
@@ -61,190 +82,212 @@
             font-size: 1.1rem;
             font-weight: 500;
             transition: all 0.3s ease;
-            padding: 0.5rem 0;
-            border-bottom: 2px solid transparent;
+            position: relative;
         }
 
-        .nav-links a:hover {
-            border-bottom: 2px solid rgba(255,255,255,0.7);
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            opacity: 0.9;
         }
 
         .hero-image {
-            padding: 3rem 0;
-            text-align: center;
-            background: white;
-            margin-bottom: 4rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .hero-image img {
-            max-width: 90%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            margin-top: 3rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .hero-image img:hover {
+        .hero-image:hover {
             transform: translateY(-5px);
         }
 
-        .hero-image-caption {
-            font-size: 1.1rem;
-            color: #666;
-            margin-top: 1.5rem;
-            font-style: italic;
-            font-family: 'Playfair Display', serif;
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .section {
-            padding: 4rem 0;
-            background: white;
-            margin: 3rem 0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 5rem 0;
         }
 
         .section-title {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             font-weight: bold;
-            color: #2c3e50;
+            color: var(--dark);
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
             position: relative;
-            padding-bottom: 1rem;
         }
 
-        .section-title:after {
+        .section-title::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
             width: 80px;
             height: 4px;
-            background: linear-gradient(90deg, #4a6491 0%, #a8c0ff 100%);
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
             border-radius: 2px;
         }
 
-        .section-title img {
-            height: 2.2rem;
-            vertical-align: middle;
-            margin-left: 0.8rem;
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
             margin: 3rem 0;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+            background: white;
             padding: 2rem;
             text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-bottom: 4px solid transparent;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-bottom-color: var(--primary);
         }
 
         .stat-number {
             font-family: 'Playfair Display', serif;
             font-size: 2.8rem;
             font-weight: bold;
-            color: #4a6491;
+            color: var(--primary);
             display: block;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: #555;
+            color: var(--gray);
             font-size: 1.1rem;
             font-weight: 500;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
 
         .feature-card {
             padding: 2rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-left-color: var(--accent);
         }
 
         .feature-title {
             font-family: 'Playfair Display', serif;
             font-size: 1.4rem;
             font-weight: 700;
-            color: #4a6491;
+            color: var(--dark);
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
-        .annotation-schema {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .annotation-item {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid #4a6491;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .annotation-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .annotation-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 0.8rem;
+        .feature-title::before {
+            content: "✦";
+            color: var(--primary);
             font-size: 1.2rem;
+        }
+
+        .feature-card:hover .feature-title::before {
+            color: var(--accent);
         }
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-top: 2.5rem;
         }
 
         .gallery-item {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ed 100%);
+            background: white;
             padding: 1.5rem;
             text-align: center;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .gallery-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary-light);
+        }
+
+        .gallery-item strong {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
         }
 
         .benchmark-table {
@@ -252,20 +295,20 @@
             border-collapse: collapse;
             margin-top: 2.5rem;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .benchmark-table th,
         .benchmark-table td {
             padding: 1.2rem;
             text-align: left;
-            border-bottom: 1px solid #e0e6ed;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .benchmark-table th {
-            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            background: var(--dark);
             color: white;
             font-weight: 600;
             font-size: 1.1rem;
@@ -276,22 +319,22 @@
         }
 
         .benchmark-table tr:hover td {
-            background-color: #f5f9ff;
+            background-color: rgba(67, 97, 238, 0.05);
         }
 
         .best-score {
             font-weight: bold;
-            color: #4a6491;
+            color: var(--primary);
             position: relative;
         }
 
-        .best-score:after {
+        .best-score::after {
             content: '★';
             position: absolute;
             right: -20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #ffc107;
+            color: var(--accent);
             font-size: 1rem;
         }
 
@@ -317,60 +360,93 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            background: var(--primary);
             color: white;
-            border: none;
+            border: 2px solid var(--primary);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(42, 67, 113, 0.3);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+            background: var(--secondary);
+            border-color: var(--secondary);
         }
 
-        .btn {
+        .btn-secondary {
             background: white;
-            color: #4a6491;
-            border: 2px solid #4a6491;
+            color: var(--primary);
+            border: 2px solid var(--primary);
         }
 
-        .btn:hover {
+        .btn-secondary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(42, 67, 113, 0.2);
-            background: #f5f9ff;
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.2);
+            background: rgba(67, 97, 238, 0.05);
         }
 
         .citation-box {
-            background: #f5f7fa;
+            background: white;
             border-radius: 8px;
             padding: 2rem;
             margin-top: 2.5rem;
             font-family: 'Courier New', monospace;
             font-size: 1rem;
             overflow-x: auto;
-            border-left: 4px solid #4a6491;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .citation-box::before {
+            content: '""';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 3rem;
+            color: rgba(67, 97, 238, 0.1);
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+        }
+
+        .highlight-section {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.03) 0%, rgba(76, 201, 240, 0.03) 100%);
+            border-radius: 12px;
+            padding: 3rem;
+            margin: 3rem 0;
         }
 
         footer {
-            background: linear-gradient(135deg, #2c3e50 0%, #1a2639 100%);
+            background: var(--dark);
             color: white;
             text-align: center;
-            padding: 3rem 0;
+            padding: 4rem 0;
             margin-top: 4rem;
         }
 
         footer p {
             margin-bottom: 1rem;
             font-size: 1.1rem;
+            opacity: 0.8;
         }
 
         footer p:last-child {
             margin-bottom: 0;
         }
 
+        .emoji-divider {
+            text-align: center;
+            font-size: 2rem;
+            margin: 3rem 0;
+            opacity: 0.5;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 0 20px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
             }
             
             .section-title {
@@ -384,10 +460,6 @@
             .nav-links {
                 display: none;
             }
-
-            .hero-image img {
-                width: 100%;
-            }
             
             .buttons {
                 flex-direction: column;
@@ -399,16 +471,20 @@
                 text-align: center;
                 justify-content: center;
             }
+            
+            .highlight-section {
+                padding: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <nav class="container">
-            <a href="#" class="logo">EmoArt</a>
+            <a href="#" class="logo"><img src="artist.png" alt="EmoArt Icon">EmoArt</a>
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
-                <li><a href="#styles">Art Styles</a></li>
+                <li><a href="#features">Features</a></li>
                 <li><a href="#benchmarks">Benchmarks</a></li>
                 <li><a href="#citation">Citation</a></li>
             </ul>
@@ -416,18 +492,35 @@
     </header>
 
     <main>
-        <section class="hero-image">
+        <section class="hero">
             <div class="container">
-                <img src="overview.jpg" alt="EmoArt Dataset Preview" style="background: white; padding: 20px;">
-                <div class="hero-image-caption">Dataset Preview: Sample artworks from the EmoArt collection</div>
+                <h1>EmoArt Dataset</h1>
+                <p>Enabling Emotion-Aware Generation via a Large-Scale and Annotated Artistic Dataset</p>
+                
+                <div class="buttons">
+                    <a href="https://huggingface.co/datasets/printblue/EmoArt-130k" class="btn btn-primary">
+                        Download Dataset
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        Read Paper
+                    </a>
+                </div>
+                
+                <div class="hero-image">
+                    <img src="overview.jpg" alt="EmoArt Dataset Preview">
+                </div>
+                <div class="hero-image">
+                    <img src="sample.jpg" alt="Model Generated Image Comparison">
+                </div>
             </div>
         </section>
 
-        <section class="section">
+        <section id="about" class="section">
             <div class="container">
-                <h2 class="section-title">EmoArt <img src="artist.png" alt="EmoArt Icon"></h2>
-                <p style="text-align: center; margin-bottom: 2rem; color: #555; font-size: 1.2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
-                    Enabling Emotion-Aware Generation via a Large-Scale and Annotated Artistic Dataset
+                <h2 class="section-title">About the Dataset</h2>
+                <p class="section-subtitle">
+                    EmoArt is a pioneering large-scale dataset designed for emotional analysis and generation in artistic images. 
+                    Comprising over 132,000 artworks with multi-dimensional annotations, it bridges the gap between visual art and emotion understanding.
                 </p>
                 
                 <div class="stats-grid">
@@ -448,90 +541,73 @@
                         <div class="stat-label">Visual Attributes</div>
                     </div>
                 </div>
-
-                <div class="buttons">
-                    <a href="https://huggingface.co/datasets/printblue/EmoArt-130k" class="btn btn-primary">
-                        Download Dataset
-                    </a>
-                    <a href="#" class="btn">
-                        Read Paper
-                    </a>
-                    <a href="#" class="btn">
-                        View Code
-                    </a>
+                
+                <div class="highlight-section">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--dark); margin-bottom: 1.5rem; text-align: center;">Dataset Highlights</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-title">Comprehensive Collection</div>
+                            <p>132,000+ artworks spanning Western and Eastern traditions, from Renaissance to contemporary movements</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-title">Rich Annotations</div>
+                            <p>Multi-dimensional annotations generated by GPT-4o with human validation (>85% agreement)</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-title">Emotional Dimensions</div>
+                            <p>12 representative emotions spanning the full valence-arousal space for interpretable classification</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-title">Visual Analysis</div>
+                            <p>Five artistic elements: Brushwork, Composition, Color, Line, and Light with structured analysis</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="about" class="section">
+        <section id="features" class="section">
             <div class="container">
-                <h2 class="section-title">About EmoArt</h2>
-                <p style="font-size: 1.1rem; text-align: justify; margin-bottom: 2rem; line-height: 1.8; max-width: 900px; margin-left: auto; margin-right: auto;">
-                    EmoArt is a pioneering large-scale dataset designed for emotional analysis and generation in artistic images. Comprising over 132,000 artworks, it spans Western and Eastern art traditions, from Renaissance to contemporary movements, bridging the gap between visual art and emotion understanding. The dataset includes multi-dimensional annotations generated by GPT-4o with human validation (>85% agreement), covering emotional, visual, and therapeutic dimensions. EmoArt enables AI systems to create emotionally expressive artistic content, supporting applications in affective computing, art therapy, and creative design.
+                <h2 class="section-title">Key Features</h2>
+                <p class="section-subtitle">
+                    EmoArt enables AI systems to create emotionally expressive artistic content, supporting applications in multiple domains.
                 </p>
                 
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #4a6491; margin: 3rem 0 1.5rem; text-align: center;">Annotation Schema</h3>
-                <div class="annotation-schema">
-                    <div class="annotation-item">
-                        <div class="annotation-title">Content Description</div>
-                        <p>Detailed, emotionally-aware descriptions averaging 35.6 words with rich narrative content and artistic context</p>
-                    </div>
-                    <div class="annotation-item">
-                        <div class="annotation-title">Visual Attributes</div>
-                        <p>Five artistic elements: Brushwork, Composition, Color, Line, and Light with structured analysis</p>
-                    </div>
-                    <div class="annotation-item">
-                        <div class="annotation-title">Valence & Arousal</div>
-                        <p>Binary emotional dimensions based on Russell's circumplex model for systematic emotion mapping</p>
-                    </div>
-                    <div class="annotation-item">
-                        <div class="annotation-title">Emotion Categories</div>
-                        <p>12 representative emotions spanning the full valence-arousal space for interpretable classification</p>
-                    </div>
-                    <div class="annotation-item">
-                        <div class="annotation-title">Therapeutic Potential</div>
-                        <p>Assessment of potential psychological benefits for art therapy and wellness applications</p>
-                    </div>
-                </div>
-
-                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #4a6491; margin: 3rem 0 1.5rem; text-align: center;">Applications</h3>
                 <div class="features-grid">
                     <div class="feature-card">
                         <div class="feature-title">Emotion-Aware Generation</div>
-                        <p>Train models to generate images with specific emotional expressions and artistic styles</p>
+                        <p>Train models to generate images with specific emotional expressions and artistic styles based on detailed prompts and annotations</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-title">Affective Computing</div>
-                        <p>Advance research in emotion recognition, sentiment analysis, and computational psychology</p>
+                        <p>Advance research in emotion recognition, sentiment analysis, and computational psychology with rich emotional metadata</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-title">Art Therapy</div>
-                        <p>Support therapeutic applications and mental health interventions through AI-assisted art</p>
+                        <p>Support therapeutic applications and mental health interventions through AI-assisted art generation and analysis</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-title">Creative Design</div>
-                        <p>Enable new forms of human-AI collaboration in artistic creation and design</p>
+                        <p>Enable new forms of human-AI collaboration in artistic creation and design with style-preserving generation</p>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section id="styles" class="section">
-            <div class="container">
-                <h2 class="section-title">Art Style Distribution</h2>
+                
+                <div class="emoji-divider">•••</div>
+                
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--dark); margin: 3rem 0 1.5rem; text-align: center;">Art Style Distribution</h3>
                 <div class="gallery">
-                    <div class="gallery-item">Impressionism<br>15,295 works</div>
-                    <div class="gallery-item">Realism<br>12,847 works</div>
-                    <div class="gallery-item">Expressionism<br>10,039 works</div>
-                    <div class="gallery-item">Abstract Art<br>8,756 works</div>
-                    <div class="gallery-item">Romanticism<br>7,892 works</div>
-                    <div class="gallery-item">Chinese Painting<br>4,156 works</div>
-                    <div class="gallery-item">Ukiyo-e<br>3,689 works</div>
-                    <div class="gallery-item">Surrealism<br>4,432 works</div>
-                    <div class="gallery-item">Cubism<br>3,024 works</div>
-                    <div class="gallery-item">Pop Art<br>2,891 works</div>
-                    <div class="gallery-item">Fauvism<br>2,456 works</div>
-                    <div class="gallery-item">+ 45 more styles</div>
+                    <div class="gallery-item"><strong>Impressionism</strong>15,295 works</div>
+                    <div class="gallery-item"><strong>Realism</strong>12,847 works</div>
+                    <div class="gallery-item"><strong>Expressionism</strong>10,039 works</div>
+                    <div class="gallery-item"><strong>Abstract Art</strong>8,756 works</div>
+                    <div class="gallery-item"><strong>Romanticism</strong>7,892 works</div>
+                    <div class="gallery-item"><strong>Chinese Painting</strong>4,156 works</div>
+                    <div class="gallery-item"><strong>Ukiyo-e</strong>3,689 works</div>
+                    <div class="gallery-item"><strong>Surrealism</strong>4,432 works</div>
+                    <div class="gallery-item"><strong>Cubism</strong>3,024 works</div>
+                    <div class="gallery-item"><strong>Pop Art</strong>2,891 works</div>
+                    <div class="gallery-item"><strong>Fauvism</strong>2,456 works</div>
+                    <div class="gallery-item"><strong>+45 Styles</strong>Complete diversity</div>
                 </div>
             </div>
         </section>
@@ -539,7 +615,7 @@
         <section id="benchmarks" class="section">
             <div class="container">
                 <h2 class="section-title">Benchmark Results</h2>
-                <p style="text-align: center; margin-bottom: 2rem; color: #555; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                <p class="section-subtitle">
                     Evaluation of state-of-the-art text-to-image diffusion models on the EmoArt dataset
                 </p>
                 
@@ -603,7 +679,7 @@
         <section id="citation" class="section">
             <div class="container">
                 <h2 class="section-title">Citation</h2>
-                <p style="text-align: center; margin-bottom: 2rem; color: #555; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                <p class="section-subtitle">
                     If you use EmoArt in your research, please cite our paper:
                 </p>
                 
@@ -620,13 +696,13 @@
 
                 <div class="buttons">
                     <a href="https://huggingface.co/datasets/printblue/EmoArt-130k" class="btn btn-primary">
-                        HuggingFace Dataset
+                        Download Dataset
                     </a>
-                    <a href="#" class="btn">
-                        ArXiv Paper
+                    <a href="#" class="btn btn-secondary">
+                        Read Paper
                     </a>
-                    <a href="#" class="btn">
-                        GitHub Code
+                    <a href="#" class="btn btn-secondary">
+                        View Code
                     </a>
                 </div>
             </div>
