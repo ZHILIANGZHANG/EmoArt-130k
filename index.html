@@ -66,8 +66,8 @@
         }
 
         .logo img {
-            width: 2.5rem; /* Increased from 2rem */
-            height: 2.5rem; /* Increased from 2rem */
+            width: 2.5rem;
+            height: 2.5rem;
         }
 
         .nav-links {
@@ -512,9 +512,6 @@
                 <div class="hero-image">
                     <img src="overview.jpg" alt="EmoArt Dataset Preview">
                 </div>
-                <div class="hero-image">
-                    <img src="display.jpg" alt="Model Generated Image Comparison">
-                </div>
             </div>
         </section>
 
@@ -573,7 +570,9 @@
             <div class="container">
                 <h2 class="section-title">Key Features</h2>
                 <p class="section-subtitle">
-                    EmoArt enables AI systems to create emotionally expressive artistic content, supporting applications in multiple domains.
+                    EmoArt enables AI systems to create emotionally
+
+ expressive artistic content, supporting applications in multiple domains.
                 </p>
                 
                 <div class="features-grid">
@@ -676,6 +675,22 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <div class="hero-image">
+                    <img src="display.jpg" alt="Model Generated Image Comparison">
+                </div>
+
+                <div class="highlight-section">
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--dark); margin-bottom: 1.5rem; text-align: center;">Visual Comparison</h3>
+                    <p style="font-size: 1.1rem; color: var(--gray); max-width: 900px; margin: 0 auto 2rem; line-height: 1.6;">
+                        The figure above illustrates the performance of various models in generating emotionally expressive artworks across different styles:
+                    </p>
+                    <ul style="max-width: 900px; margin: 0 auto; padding-left: 1.5rem; font-size: 1.1rem; color: var(--dark);">
+                        <li><strong>Color Field Painting:</strong> FLUX.1-dev-finetuned uses pure blue and white blocks to create a calming atmosphere, capturing the essence of Color Field Painting. In contrast, FLUX.1-dev and SDXL produce images with visual clutter and inconsistent compositions, lacking stylistic clarity.</li>
+                        <li><strong>Traditional Chinese Painting:</strong> FLUX.1-dev-finetuned employs minimalist compositions and soft brushwork, conveying serenity and harmony aligned with East Asian aesthetics. Conversely, FLUX.1-dev, SDXL, and PixArt-sigma use vivid colors and intricate layouts, which reduce the subtle emotional tone typical of this genre.</li>
+                        <li><strong>High-Arousal Emotions:</strong> FLUX.1-dev-finetuned excels with chaotic line work and asymmetric compositions, effectively visualizing intense emotions. While FLUX.1-dev, SDXL, and PixArt-sigma also use non-equilibrium layouts, their outputs show repetitive patterns and limited diversity, resulting in less impactful emotional expression.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
