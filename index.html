@@ -493,6 +493,7 @@
                 <a href="#" class="logo">EmoArt<span>.</span></a>
                 <ul class="nav-links">
                     <li><a href="#about">About</a></li>
+                    <li><a href="#salience">Salience</a></li>
                     <li><a href="#benchmarks">Benchmarks</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#citation">Citation</a></li>
@@ -513,13 +514,16 @@
                 
                 <div class="btn-group">
                     <a href="https://huggingface.co/datasets/printblue/EmoArt-130k" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download Full Dataset
-                    </a>
-                    <a href="https://huggingface.co/datasets/printblue/EmoArt-5k" class="btn btn-outline">
-                        Preview (5k)
+                        <i class="fas fa-database"></i> EmoArt Dataset
                     </a>
                     <a href="https://github.com/ZHILIANGZHANG/EmoArt-130k/tree/main" class="btn btn-outline">
-                        <i class="fab fa-github"></i> View Code
+                        <i class="fab fa-github"></i> EmoArt Code
+                    </a>
+                    <a href="https://huggingface.co/datasets/printblue/EmoArt-Salience" class="btn btn-primary">
+                        <i class="fas fa-database"></i> FAB-G Dataset
+                    </a>
+                    <a href="https://github.com/ZHILIANGZHANG/FAB-G" class="btn btn-outline">
+                        <i class="fab fa-github"></i> FAB-G Code
                     </a>
                 </div>
 
@@ -585,8 +589,47 @@
             </div>
         </section>
 
+        <!-- Salience Extension Section -->
+        <section id="salience" style="background-color: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">FAB-G Salience Extension</h2>
+                    <p class="section-subtitle">A compact human-validated extension for attribute-grounded artwork emotion reasoning.</p>
+                </div>
+
+                <div class="highlight-box" style="background: var(--bg-surface); margin-top: 0;">
+                    <div class="features-grid" style="align-items: start;">
+                        <div>
+                            <i class="fas fa-filter feature-icon"></i>
+                            <h3 class="feature-title">Attribute Salience</h3>
+                            <p class="feature-text">EmoArt-Salience annotates which formal attributes are emotionally operative for each artwork, separating cues that are merely visible from cues that support the affective judgment.</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-layer-group feature-icon"></i>
+                            <h3 class="feature-title">Five Formal Cues</h3>
+                            <p class="feature-text">The salience labels cover Color, Composition, Line, Light, and Brushstroke, matching the FAB-G attribute-agent vocabulary used for selective reasoning.</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-diagram-project feature-icon"></i>
+                            <h3 class="feature-title">FAB-G Pipeline</h3>
+                            <p class="feature-text">FAB-G first predicts salient attributes with specialized agents, then sends only the selected attributes to the final agent for cue-constrained emotion analysis.</p>
+                        </div>
+                    </div>
+
+                    <div class="btn-group" style="margin-top: 2.5rem;">
+                        <a href="https://huggingface.co/datasets/printblue/EmoArt-Salience" class="btn btn-primary">
+                            <i class="fas fa-download"></i> FAB-G Dataset
+                        </a>
+                        <a href="https://github.com/ZHILIANGZHANG/FAB-G" class="btn btn-outline">
+                            <i class="fab fa-github"></i> GitHub Repository
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Benchmark Section -->
-        <section id="benchmarks" style="background-color: var(--bg-secondary);">
+        <section id="benchmarks">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">Benchmark Performance</h2>
